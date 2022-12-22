@@ -11,7 +11,11 @@ We are using the rules of contributions as defined by the developers behind the 
 > - Commented on >= 2 issues that weren’t theirs
 > - Commented >= 6 times on any one issue
 
-Note: Python >3.11 is required for `tomllib`.
+An important note, here, is that this is not capturing dev activity by commits or lines added, as many other approaches do. Our reasoning is a desire to caputre "collaborative development" where an Issue or PR is opened, discussed, reviewed, and worked on in tandem with multiple devs. This does mean that certain activity may not be counted in this report. For example, in QAing the `github_activity` data dump, we noticed [Near-Lands](https://github.com/vgrichina/near-lands) was not included because all activity (in 2022) was without an issue or PR. Future iterations of this report may include a more comprehensive definition of activity.
 
 ## Attribution
 Thanks to [Electric Capital](https://github.com/electric-capital/crypto-ecosystems) for compiling a great list of repositories for crypto ecosystems.
+
+### Pecularities
+Note: Python >3.11 is required for `tomllib`.
+Snowflake connector is only compatible up to 3.9.x, so you must ignore the full `requirements.txt` and install the packages manually. `load.py` is used to load the result to our (Flipside) warehouse.

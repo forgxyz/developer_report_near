@@ -1,2 +1,5 @@
 github-activity
 pandas
+pyarrow==5.0.0
+python-dotenv
+snowflake.connector

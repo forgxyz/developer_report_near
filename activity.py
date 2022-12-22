@@ -8,7 +8,7 @@ columns = ['state', 'id', 'title', 'url', 'createdAt', 'updatedAt', 'closedAt',
            'mergeCommit', 'baseRefName', 'comments', 'org', 'repo', 'thumbsup']
 results = pd.DataFrame(columns=columns)
 
-since = '2021-12-31'
+since = '2022-01-01'
 until = '2022-12-31'
 directory = 'electric'
 
