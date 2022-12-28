@@ -1,7 +1,7 @@
 # NEAR Developer Report
 The purpose of this repository is to ensure the data collection behind the 2022 NEAR Developer Report, produced by [Flipside Crypto](https://flipsidecrypto.xyz/), is transparent and reproducible. Measurable activity is limited to public repositories on Github and we are using the list compiled by Electric Capital as of December 22, 2022.
 
-The output of running this script is stored as a pickled DataFrame. The contribution activity data was collected around 15:00 UTC on December 22, 2022.
+The output of running this script is stored as a pickled DataFrame. The contribution activity data was collected around 17:00 UTC on December 28, 2022.
 
 ## Methodology
 We are using the rules of contributions as defined by the developers behind the [Github Activity](https://github-activity.readthedocs.io/en/latest/) package:

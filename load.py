@@ -1,30 +1,28 @@
 import pandas as pd
 import snowflake.connector
+import os
 
 from dotenv import load_dotenv
-from os import getenv
 from snowflake.connector.pandas_tools import write_pandas
 
-# load necessary local files
+# use python 3.9, snowflake connector not compatible with 3.11 yet
+# set filepath(s)
+directory = 'test'
+queue = []
+for file in os.listdir(directory):
+    queue.append(f'{directory}/{file}')
+
+# set destination table
+TABLE_NAME = 'TEST_TABLE'
+
+# load and set environment variables
 vars = load_dotenv()
-results = pd.read_pickle('results.pkl')
-
-# sample = results[5:10]
-
-# set environment variables
-USERNAME = getenv('LOGIN')
-PASSWORD = getenv('PASSWORD')
-ACCOUNT = getenv('ACCOUNT')
-WAREHOUSE = getenv('WAREHOUSE')
-DATABASE = getenv('DATABASE')
-SCHEMA = getenv('SCHEMA')
-TABLE_NAME = getenv('TABLE_NAME')
-
-
-
-# capitalize column names to match table
-results.columns = map(lambda x: str(x).upper(), results.columns)
-# sample.columns = map(lambda x: str(x).upper(), sample.columns)
+USERNAME = os.getenv('LOGIN')
+PASSWORD = os.getenv('PASSWORD')
+ACCOUNT = os.getenv('ACCOUNT')
+WAREHOUSE = os.getenv('WAREHOUSE')
+DATABASE = os.getenv('DATABASE')
+SCHEMA = os.getenv('SCHEMA')
 
 # initialize connection
 with snowflake.connector.connect(
@@ -36,10 +34,23 @@ with snowflake.connector.connect(
     schema=SCHEMA
 ) as con:
 
-    # write to snowflake
-    success, nchunks, nrows, _ = write_pandas(
-        con, 
-        results, 
-        table_name=TABLE_NAME,
-        chunk_size = 300
-        )
+    for filepath in queue:
+        print(f'Loading {filepath}...')
+        results = pd.read_pickle(filepath)
+
+        # capitalize column names to match table
+        results.columns = map(lambda x: str(x).upper(), results.columns)
+
+        # write to snowflake
+        success, nchunks, nrows, _ = write_pandas(
+            con, 
+            results, 
+            table_name=TABLE_NAME,
+            chunk_size = 300
+            )
+
+        if success:
+            print(f'Loaded {nrows} rows into {nchunks} chunks to {TABLE_NAME} table from {filepath}.')
+        else:
+            print(f'Failed to load {filepath} to {TABLE_NAME} table.')
+            break
