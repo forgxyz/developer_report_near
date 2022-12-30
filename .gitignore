@@ -1,1 +1,8 @@
 .env
+.python-version
+.log
+data
+temp
+test
+
+TODO.md

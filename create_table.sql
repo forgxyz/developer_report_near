@@ -1,0 +1,22 @@
+create or replace table near_dev.bronze.TABLE_NAME (
+    state string,
+    id string,
+    title string,
+    url string,
+    createdAt timestamp_ntz,
+    updatedAt timestamp_ntz,
+    closedAt timestamp_ntz,
+    labels object,
+    number integer,
+    authorAssociation string,
+    author string,
+    mergedBy object,
+    mergeCommit object,
+    baseRefName string,
+    comments object,
+    org string,
+    repo string,
+    thumbsup integer,
+    ingestion_range string,
+    _ingested_at timestamp_ntz
+);
