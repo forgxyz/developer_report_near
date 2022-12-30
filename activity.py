@@ -3,6 +3,7 @@ import logging
 import tomllib as tl
 import os
 import sys
+import time
 import pandas as pd
 
 from datetime import datetime, timedelta, timezone
@@ -12,7 +13,7 @@ logging.basicConfig(filename='.log/activity.log', level=logging.ERROR,
                     format='%(asctime)s %(levelname)s %(name)s %(message)s')
 logger=logging.getLogger(__name__)
 
-# python 3.11 required for this to work
+# python 3.11 required for tomllib
 # note - must set GITHUB_ACCESS_TOKEN environment variable
 
 # define output dataframe
@@ -25,8 +26,8 @@ results = pd.DataFrame(columns=columns)
 directory = 'electric'
 
 # set range of data to be ingested, assumed to be quarterly
-range_start = '2022-07-01'
-num_quarters = 2
+range_start = '2019-01-01'
+num_quarters = 16
 
 # partition the ingestion range into quarters
 slices = pd.DataFrame()
@@ -34,7 +35,8 @@ slices['date'] = pd.date_range(start=range_start, periods=num_quarters, freq='Q'
 
 # loop through the quarters
 since = range_start
-for range_end in slices['date']:
+
+for i, range_end in enumerate(slices['date']):
     quarter_results = pd.DataFrame(columns=columns)
     until = range_end.strftime('%Y-%m-%d')
 
@@ -71,12 +73,20 @@ for range_end in slices['date']:
 
                 # save the intermediate results to a pickle file, just in case
                 if len(res.index) > 0:
-                    res.to_pickle(f'data/quarterly/results_{since}_{until}_{file[:-5]}.pkl')
+                    res.to_pickle(f'data/repo/results_{since}_{until}_{org}_{repo}.pkl')
                 else:
-                    with open('empty_log.txt', 'a+') as f:
+                    with open('.log/empty_log.txt', 'a+') as f:
                         f.write(f'{since}_{until}_{file}_{org}_{repo} is empty\n')
     
     quarter_results.to_pickle(f'data/quarterly/results_{since}_{until}.pkl')
+
+    # wait 40 min before starting the next run
+    print(f'{since} to {until} complete. Sleeping for 40 minutes... Start time: {datetime.now().strftime("%H:%M:%S")}')
+    
+    # but only if it's not the last run
+    if i < num_quarters - 1:
+        time.sleep(2400)
+
     since = (datetime.strptime(until, '%Y-%m-%d') + timedelta(days=1)).strftime('%Y-%m-%d')
 
 # save the final results to a pickle file

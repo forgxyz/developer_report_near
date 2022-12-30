@@ -7,13 +7,13 @@ from snowflake.connector.pandas_tools import write_pandas
 
 # use python 3.9, snowflake connector not compatible with 3.11 yet
 # set filepath(s)
-directory = 'test'
+directory = 'data/quarterly'
 queue = []
 for file in os.listdir(directory):
     queue.append(f'{directory}/{file}')
 
 # set destination table
-TABLE_NAME = 'TEST_TABLE'
+TABLE_NAME = 'GITHUB_ACTIVITY_QUARTERLY'
 
 # load and set environment variables
 vars = load_dotenv()
